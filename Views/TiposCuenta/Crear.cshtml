@@ -6,6 +6,8 @@
 <h1>Crear tipo cuenta</h1>
 <h5>El tipo de cuenta se refiere a cómo podemos agrupar cuentas. Ejemplos: Prestamos, tarjeta de crédito, etc.</h5>
 
+<div asp-validation-summary="All" class="text-danger"></div>
+
 <form asp-controller="TiposCuenta" asp-action="Crear">
     <div class="mb-3">
         <label for="Nombre" class="form-label">Nombre</label>
