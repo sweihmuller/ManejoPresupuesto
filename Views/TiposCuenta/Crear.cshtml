@@ -10,9 +10,14 @@
 
 <form asp-controller="TiposCuenta" asp-action="Crear">
     <div class="mb-3">
-        <label for="Nombre" class="form-label">Nombre</label>
-        <input type="text" id="Nombre" name="Nombre" class="form-control"/>
+        <label asp-for="Nombre" class="form-label"></label>
+        <input type="text" asp-for="Nombre" id="Nombre" class="form-control"/>
+        <span asp-validation-for="Nombre" class="text-danger"></span>
     </div>
 
     <button type="submit" class="btn btn-primary">Enviar</button>
 </form>
+
+@section Scripts {
+    <partial name="_ValidationScripsPartial" />
+}
