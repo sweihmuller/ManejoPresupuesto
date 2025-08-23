@@ -1,5 +1,6 @@
 ﻿using Dapper;
 using ManejoPresupuesto.Models;
+using ManejoPresupuesto.Servicios;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 
@@ -7,18 +8,15 @@ namespace ManejoPresupuesto.Controllers
 {
     public class TiposCuentaController : Controller
     {
-        private readonly string connectionString;
-        public TiposCuentaController(IConfiguration configuration)
+        private readonly IRepositorioTipoCuentas _repositorioTipoCuentas;
+
+        public TiposCuentaController(IRepositorioTipoCuentas repositorioTipoCuentas) 
         {
-            connectionString = configuration.GetConnectionString("DefaultConnection");
+            _repositorioTipoCuentas = repositorioTipoCuentas;
         }
         public IActionResult Crear()
         {
-            using (var connection = new SqlConnection(connectionString))
-            {
-                var query = connection.Query("SELECT 1").FirstOrDefault();
-            }
-                return View();
+            return View();
         }
 
         [HttpPost]
@@ -28,7 +26,8 @@ namespace ManejoPresupuesto.Controllers
             {
                 return View(tipoCuenta);
             }
-
+            tipoCuenta.UsuarioId = 1;
+            _repositorioTipoCuentas.Crear(tipoCuenta);
             return View();
         }
     }
