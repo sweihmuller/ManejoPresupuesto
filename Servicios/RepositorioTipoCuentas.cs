@@ -36,5 +36,6 @@ namespace ManejoPresupuesto.Servicios
                                                                         WHERE Nombre = @Nombre AND UsuarioId = @UsuarioId;", new { nombre, usuarioId });
             return existe == 1;
         }
+
     }
 }

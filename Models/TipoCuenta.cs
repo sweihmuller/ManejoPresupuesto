@@ -1,13 +1,15 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using ManejoPresupuesto.Validaciones;
+using Microsoft.AspNetCore.Mvc;
 
 namespace ManejoPresupuesto.Models
 {
-    public class TipoCuenta: IValidatableObject
+    public class TipoCuenta : IValidatableObject
     {
         public int id { get; set; }
         [Display(Name = "Nombre del tipo de cuenta")]
         [PrimeraLetraMaysucula]
+        [Remote(action: "VerificarExisteTipoCuenta", controller: "TiposCuenta")]
         public string Nombre { get; set; }
         public int UsuarioId { get; set; }
         public int Orden { get; set; }
