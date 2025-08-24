@@ -8,6 +8,7 @@ namespace ManejoPresupuesto.Servicios
     public interface IRepositorioTipoCuentas
     {
         Task Crear(TipoCuenta tipoCuenta);
+        Task<bool> Existe(string nombre, int usuarioId);
     }
 
 
@@ -27,6 +28,13 @@ namespace ManejoPresupuesto.Servicios
                                                     SELECT SCOPE_IDENTITY()",  tipoCuenta);
             tipoCuenta.id = id;
         }
-    }
 
+        public async Task<bool> Existe(string nombre, int usuarioId)
+        {
+            using var connection = new SqlConnection(connectionString);
+            var existe = await connection.QueryFirstOrDefaultAsync<int>(@$"SELECT 1 FROM TiposCuenta 
+                                                                        WHERE Nombre = @Nombre AND UsuarioId = @UsuarioId;", new { nombre, usuarioId });
+            return existe == 1;
+        }
+    }
 }
