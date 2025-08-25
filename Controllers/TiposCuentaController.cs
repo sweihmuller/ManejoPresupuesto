@@ -80,7 +80,7 @@ namespace ManejoPresupuesto.Controllers
         {
             var usuarioId = servicioUsario.ObtenerUsuarioId();
             var tipoCuentaExiste = await _repositorioTipoCuentas.ObtenerPorId(tipoCuenta.id, usuarioId);
-            if(tipoCuentaExiste is null)
+            if (tipoCuentaExiste is null)
             {
                 return RedirectToAction("NoEncontrado", "Home");
             }
@@ -88,6 +88,11 @@ namespace ManejoPresupuesto.Controllers
             await _repositorioTipoCuentas.Actualizar(tipoCuenta);
             return RedirectToAction("Index");
         }
-        
+
+        [HttpPost]
+        public async Task<IActionResult> Ordenar([FromBody] int[] ids)
+        {
+            return Ok();
+        }
     }
 }
