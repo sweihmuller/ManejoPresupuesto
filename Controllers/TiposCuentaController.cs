@@ -92,7 +92,23 @@ namespace ManejoPresupuesto.Controllers
         [HttpPost]
         public async Task<IActionResult> Ordenar([FromBody] int[] ids)
         {
+            var usuarioId = servicioUsario.ObtenerUsuarioId();
+            var tipoCuentas = await _repositorioTipoCuentas.Obtener(usuarioId);
+            var idsTiposCuentas = tipoCuentas.Select(x => x.id);
+
+            var idsTiposCuentaNoPerteneceAlUsuario = ids.Except(idsTiposCuentas).ToList();
+
+            if(idsTiposCuentaNoPerteneceAlUsuario.Count() > 0)
+            {
+                return Forbid();
+            }
+
+            var tiposCuentasOrdenado = ids.Select((valor, indice) => new TipoCuenta() { id = valor, Orden = indice + 1 }).AsEnumerable();
+
+            await _repositorioTipoCuentas.Ordenar(tiposCuentasOrdenado);
             return Ok();
         }
+
+
     }
 }
