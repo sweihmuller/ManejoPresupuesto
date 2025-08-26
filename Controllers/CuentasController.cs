@@ -1,0 +1,60 @@
+﻿using System.Threading.Tasks;
+using ManejoPresupuesto.Models;
+using ManejoPresupuesto.Servicios;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+
+namespace ManejoPresupuesto.Controllers
+{
+    public class CuentasController: Controller
+    {
+        private readonly IRepositorioTipoCuentas repositorioTipoCuentas;
+        private readonly IServicioUsario servicioUsario;
+        private readonly IRepositorioCuentas repositorioCuentas;
+
+        public CuentasController(IRepositorioTipoCuentas repositorioTipoCuentas, IServicioUsario servicioUsario, IRepositorioCuentas repositorioCuentas)
+        {
+            this.repositorioTipoCuentas = repositorioTipoCuentas;
+            this.servicioUsario = servicioUsario;
+            this.repositorioCuentas = repositorioCuentas;
+        }
+
+        public async Task<IActionResult> Crear()
+        {
+            var usuarioId = servicioUsario.ObtenerUsuarioId();
+            var modelo = new CuentaCreacionViewModel();
+            modelo.TiposCuentas = await ObtenerTiposCuenta(usuarioId);
+            
+            return View(modelo);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Crear(CuentaCreacionViewModel cuenta)
+        {
+            var usuarioId = servicioUsario.ObtenerUsuarioId();
+            var tipoCuenta = await repositorioTipoCuentas.ObtenerPorId(cuenta.TipoCuentaId, usuarioId);
+
+            if(tipoCuenta is null)
+            {
+                return RedirectToAction("NoEncontrado", "Home");
+            }
+
+            if(!ModelState.IsValid)
+            {
+                cuenta.TiposCuentas = await ObtenerTiposCuenta(usuarioId);
+                return View(cuenta);
+            }
+
+            await repositorioCuentas.Crear(cuenta);
+            return RedirectToAction("Index");
+
+        }
+
+        private async Task<IEnumerable<SelectListItem>> ObtenerTiposCuenta(int usuarioId)
+        {
+            var tiposCuenta = await repositorioTipoCuentas.Obtener(usuarioId);
+
+            return tiposCuenta.Select(x => new SelectListItem(x.Nombre, x.id.ToString()));
+        }
+    }
+}
