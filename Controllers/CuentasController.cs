@@ -19,6 +19,20 @@ namespace ManejoPresupuesto.Controllers
             this.repositorioCuentas = repositorioCuentas;
         }
 
+        public async Task<IActionResult> Index()
+        {
+            var usuarioId = servicioUsario.ObtenerUsuarioId();
+            var cuentaConTipoCuenta = await repositorioCuentas.Buscar(usuarioId);
+
+            var modelo = cuentaConTipoCuenta.GroupBy(x => x.TipoCuenta).Select(grupo => new IndiceCuentasViewModel
+            {
+                TipoCuenta = grupo.Key,
+                Cuentas = grupo.AsEnumerable()
+            }).ToList();
+
+            return View(modelo);
+        }
+
         public async Task<IActionResult> Crear()
         {
             var usuarioId = servicioUsario.ObtenerUsuarioId();
@@ -56,5 +70,7 @@ namespace ManejoPresupuesto.Controllers
 
             return tiposCuenta.Select(x => new SelectListItem(x.Nombre, x.id.ToString()));
         }
+
+      
     }
 }
