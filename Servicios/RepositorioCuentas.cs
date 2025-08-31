@@ -34,12 +34,38 @@ namespace ManejoPresupuesto.Servicios
                                                           WHERE TiposCuenta.UsuarioId = @UsuarioId
                                                           ORDER BY TiposCuenta.Orden", new { usuarioId });
         }
-    }
 
+        public async Task<Cuenta> ObtenerPorId(int id, int usuarioId)
+        {
+            var connect = new SqlConnection(connectionString);
+            return await connect.QueryFirstOrDefaultAsync<Cuenta>($@"SELECT Cuentas.id, Cuentas.Nombre, Balance, TiposCuenta.id
+                                                          FROM Cuentas
+                                                          INNER JOIN TiposCuenta 
+                                                          ON TiposCuenta.id = Cuentas.TipoCuentaId
+                                                          WHERE TiposCuenta.UsuarioId = @UsuarioId and Cuentas.Id = @Id",
+                                                          new { id, usuarioId });
+        }
 
-    public interface IRepositorioCuentas
-    {
-        Task<IEnumerable<Cuenta>> Buscar(int usuarioId);
-        Task Crear(Cuenta cuenta);
+        public async Task Actualizar(CuentaCreacionViewModel cuenta)
+        {
+            var connect = new SqlConnection(connectionString);
+            await connect.ExecuteAsync($@"UPDATE CUENTAS
+                                         SET Nombre = @Nombre, 
+                                             Balance = @Balance, 
+                                             Descripcion = @Descripcion, 
+                                             TipoCuentaId = @TipoCuentaId
+                                         WHERE Id = @Id", cuenta);
+        }
     }
 }
+
+    
+
+public interface IRepositorioCuentas
+{
+    Task Actualizar(CuentaCreacionViewModel model);
+    Task<IEnumerable<Cuenta>> Buscar(int usuarioId);
+    Task Crear(Cuenta cuenta);
+    Task<Cuenta> ObtenerPorId(int id, int usuarioId);
+}
+
