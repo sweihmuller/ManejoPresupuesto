@@ -19,7 +19,7 @@ namespace ManejoPresupuesto.Controllers
         {
             var usuarioId = servicioUsario.ObtenerUsuarioId();
             var categorias = await repositorioCategorias.Obtener(usuarioId);
-            
+
             return View(categorias);
         }
 
@@ -34,7 +34,7 @@ namespace ManejoPresupuesto.Controllers
         {
             var usuarioId = servicioUsario.ObtenerUsuarioId();
 
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 return View(categoria);
             }
@@ -47,6 +47,40 @@ namespace ManejoPresupuesto.Controllers
             return RedirectToAction("Index");
         }
 
+        public async Task<IActionResult> Editar(int id)
+        {
+            var usuarioId = servicioUsario.ObtenerUsuarioId();
+            var categoria = await repositorioCategorias.ObtenerPorId(id, usuarioId);
+
+            if (categoria is null)
+            {
+                return RedirectToAction("NoEncontrado", "Home");
+            }
+
+            return View(categoria);
+        }
+
+        [HttpPost] 
+        public async Task<IActionResult> Editar(Categoria categoriaEditar)
+        {
+            if (!ModelState.IsValid) 
+            {
+                return View(categoriaEditar);
+            }
+            var usuarioId = servicioUsario.ObtenerUsuarioId();
+            var categoria = await repositorioCategorias.ObtenerPorId(categoriaEditar.Id, usuarioId);
+
+            if (categoria is null)
+            {
+                return RedirectToAction("NoEncontrado", "Home");
+            }
+
+            categoriaEditar.UsuarioId = usuarioId;
+
+            await repositorioCategorias.Actualizar(categoriaEditar);
+
+            return RedirectToAction("Index");
+        }
 
     }
 }
