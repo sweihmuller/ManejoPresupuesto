@@ -93,7 +93,7 @@ namespace ManejoPresupuesto.Controllers
             modelo.TiposCuentas = await ObtenerTiposCuenta(usuarioId);
             return View(modelo); 
         }
-
+        
         [HttpPost]
         public async Task<IActionResult> Editar(CuentaCreacionViewModel cuentaEditar)
         {

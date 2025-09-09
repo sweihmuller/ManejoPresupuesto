@@ -1,5 +1,6 @@
 using ManejoPresupuesto.Servicios;
-using Microsoft.Extensions.DependencyInjection;
+using AutoMapper;
+using ManejoPresupuesto.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +11,11 @@ builder.Services.AddTransient<IRepositorioCuentas, RepositorioCuentas>();
 builder.Services.AddTransient<IRepositorioCategorias, RepositorioCategorias>();
 builder.Services.AddTransient<IRepositorioTransacciones, RepositorioTransacciones>();
 builder.Services.AddTransient<IServicioUsario, ServicioUsuario>();
+builder.Services.AddAutoMapper((cfg) =>
+{
+    cfg.CreateMap<Transaccion, TransaccionCreacionViewModel>();
+    cfg.CreateMap<TransaccionActualizacionViewModel, Transaccion>().ReverseMap();
+});
 
 var app = builder.Build();
 
