@@ -11,6 +11,8 @@ builder.Services.AddTransient<IRepositorioCuentas, RepositorioCuentas>();
 builder.Services.AddTransient<IRepositorioCategorias, RepositorioCategorias>();
 builder.Services.AddTransient<IRepositorioTransacciones, RepositorioTransacciones>();
 builder.Services.AddTransient<IServicioUsario, ServicioUsuario>();
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddTransient<IServiciosReporte, ServicioReporte>();
 builder.Services.AddAutoMapper((cfg) =>
 {
     cfg.CreateMap<Transaccion, TransaccionCreacionViewModel>();
