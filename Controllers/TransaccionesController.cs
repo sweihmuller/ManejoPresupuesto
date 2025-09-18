@@ -42,6 +42,25 @@ namespace ManejoPresupuesto.Controllers
 
         }
 
+        public IActionResult Semanal()
+        {
+            return View();
+        }
+
+        public IActionResult Mensual()
+        {
+            return View();  
+        }
+
+        public IActionResult ExcelReporte()
+        {
+            return View();
+        }
+
+        public IActionResult Calendario()
+        {
+            return View();
+        }
         public async Task<IActionResult> Crear()
         {
             var usuarioId = servicioUsario.ObtenerUsuarioId();
